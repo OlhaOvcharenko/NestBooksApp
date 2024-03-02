@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/shared/services/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { Book } from '@prisma/client';
 import { BadRequestException } from '@nestjs/common';
 
@@ -39,7 +39,7 @@ export class BooksService {
       });
     } catch (error) {
       if (error.code === 'P2025')
-        throw new BadRequestException("Product doesn't exist");
+        throw new BadRequestException("Book doesn't exist");
       throw error;
     }
   }
