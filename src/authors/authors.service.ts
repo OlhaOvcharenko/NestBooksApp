@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/shared/services/prisma.service';
 import { Author } from '@prisma/client';
-
+import { ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class AuthorsService {
@@ -23,10 +23,16 @@ export class AuthorsService {
     });
   }
 
-  public create(authorData: Omit<Author, 'id'>,): Promise <Author> {
-    return this.prismaService.author.create({
-      data: authorData,
-    });
+  public async create(authorData: Omit<Author, 'id'>,): Promise <Author> {
+    try {
+      return await this.prismaService.author.create({
+        data: authorData,
+      });
+    } catch (error) {
+      if (error.code === 'P2002')
+        throw new ConflictException('Name is already taken');
+      throw error;
+    }
   }
 
   public updateById (id: Author['id'], 

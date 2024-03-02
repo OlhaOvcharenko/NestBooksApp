@@ -4,23 +4,26 @@ import {
     Length,
     IsInt,
     Min,
-    IsUUID
+    IsUUID,
+    Max
 } from 'class-validator';
   
 export class CreateBookDTO {
     @IsNotEmpty()
     @IsString()
-    @Length(10, 20)
+    @Length(3, 100)
     title: string;
   
     @IsNotEmpty()
     @IsInt()
-    @Min(0)
+    @Min(1)
+    @Max(5)
     rating: number;
 
     @IsNotEmpty()
     @IsInt()
     @Min(0)
+    @Max(1000)
     price: number;
 
     @IsNotEmpty()

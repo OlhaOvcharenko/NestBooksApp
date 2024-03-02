@@ -18,7 +18,7 @@ export class BooksController {
   @Get('/:id')
   async getById(@Param('id') id: string) {
     const order = await this.booksService.getById(id);
-    if (!order) throw new NotFoundException('Product not found');
+    if (!order) throw new NotFoundException('Book not found');
     return order;
   }
 
@@ -27,7 +27,7 @@ export class BooksController {
   async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
 
     if (!(await this.booksService.getById(id)))
-      throw new NotFoundException('Order not found');
+      throw new NotFoundException('Book not found');
 
     await this.booksService.deleteById(id);
     return { success: true };
@@ -44,7 +44,7 @@ export class BooksController {
     @Body() orderData: UpdateBookDTO,
   ){
     if (!(await this.booksService.getById(id)))
-      throw new NotFoundException('Order not found');
+      throw new NotFoundException('Book not found');
 
     await this.booksService.updateById(id, orderData);
     return { success: true };

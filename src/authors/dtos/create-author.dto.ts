@@ -8,11 +8,11 @@ import {
 export class CreateAuthorDTO {
   @IsNotEmpty()
   @IsString()
-  @Length(10, 20)
+  @Length(3, 100)
   name: string;
 
   @IsNotEmpty()
   @IsString()
-  @Length(5, 20)
+  @Length(1, 3)
   country: string;
 }

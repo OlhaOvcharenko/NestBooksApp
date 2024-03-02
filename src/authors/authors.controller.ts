@@ -18,14 +18,14 @@ export class AuthorsController {
   @Get('/:id')
     async getById(@Param('id', new ParseUUIDPipe()) id: string) {
       const author = await this.authorsService.getById(id);
-      if (!author) throw new NotFoundException('Product not found');
+      if (!author) throw new NotFoundException('Author not found');
       return author;
     }
 
     @Delete('/:id')
     async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
       if (!(await this.authorsService.getById(id)))
-        throw new NotFoundException('Product not found');
+        throw new NotFoundException('Author not found');
       await this.authorsService.deleteById(id);
       return { success: true };
     }
@@ -40,7 +40,7 @@ export class AuthorsController {
     async  update(@Param('id', new ParseUUIDPipe()) id: string,
     @Body() authorData: UpdateAuthorDTO){
         if (!(await this.authorsService.getById(id)))
-        throw new NotFoundException('Product not found');
+        throw new NotFoundException('Author not found');
   
         await this.authorsService.updateById(id, authorData );
         return { success: true };
