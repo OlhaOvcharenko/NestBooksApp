@@ -26,7 +26,7 @@ export class UsersService {
   }
 
   public async create(
-    userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
+    userData: Omit<User, 'id' |  'createdAt' | 'updatedAt' | 'role'>,
     password: Password['hashedPassword'],
   ): Promise<User> {
 
