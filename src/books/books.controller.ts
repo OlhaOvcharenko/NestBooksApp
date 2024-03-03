@@ -25,6 +25,7 @@ export class BooksController {
 
 
   @Delete('/:id')
+  @UseGuards(JwtAuthGuard)
   async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
 
     if (!(await this.booksService.getById(id)))
@@ -41,6 +42,7 @@ export class BooksController {
   }
 
   @Put('/:id')
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() orderData: UpdateBookDTO,
