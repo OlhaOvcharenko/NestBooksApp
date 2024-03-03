@@ -26,7 +26,8 @@ export class AuthorsController {
   @Delete('/:id')
   @UseGuards(JwtAuthGuard)
   async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
-    if (!(await this.authorsService.getById(id)))
+    const author = await this.authorsService.getById(id)
+    if (!author)
       throw new NotFoundException('Author not found');
     await this.authorsService.deleteById(id);
     return { success: true };
@@ -43,7 +44,8 @@ export class AuthorsController {
   @UseGuards(JwtAuthGuard)
   async  update(@Param('id', new ParseUUIDPipe()) id: string,
   @Body() authorData: UpdateAuthorDTO){
-    if (!(await this.authorsService.getById(id)))
+    const author = await this.authorsService.getById(id)
+    if (!author)
       throw new NotFoundException('Author not found');
 
     await this.authorsService.updateById(id, authorData );

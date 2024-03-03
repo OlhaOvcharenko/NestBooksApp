@@ -18,17 +18,17 @@ export class BooksController {
 
   @Get('/:id')
   async getById(@Param('id') id: string) {
-    const order = await this.booksService.getById(id);
-    if (!order) throw new NotFoundException('Book not found');
-    return order;
+    const book = await this.booksService.getById(id);
+    if (!book) throw new NotFoundException('Book not found');
+    return book;
   }
 
 
   @Delete('/:id')
   @UseGuards(JwtAuthGuard)
   async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
-
-    if (!(await this.booksService.getById(id)))
+    const book = await this.booksService.getById(id);
+    if (!book)
       throw new NotFoundException('Book not found');
 
     await this.booksService.deleteById(id);
@@ -47,7 +47,8 @@ export class BooksController {
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() orderData: UpdateBookDTO,
   ){
-    if (!(await this.booksService.getById(id)))
+    const book = await this.booksService.getById(id);
+    if (!book)
       throw new NotFoundException('Book not found');
 
     await this.booksService.updateById(id, orderData);
