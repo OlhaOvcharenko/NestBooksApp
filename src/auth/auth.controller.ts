@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Delete } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Post } from '@nestjs/common';
 import { Body } from '@nestjs/common';
@@ -23,6 +23,15 @@ export class AuthController {
     async login(@Request() req, @Response() res) {
       const tokens = await this.authService.createSession(req.user);
       res.cookie('auth', tokens, { httpOnly: true });
+      res.send({
+        message: 'success',
+      });
+    }
+
+    @UseGuards(LocalAuthGuard)
+    @Delete('logout')
+    async logout( @Response() res) {
+      res.clearCookie('auth', { httpOnly: true });
       res.send({
         message: 'success',
       });

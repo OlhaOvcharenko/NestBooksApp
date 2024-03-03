@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Book } from '@prisma/client';
-import { BadRequestException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class BooksService {
@@ -38,9 +38,11 @@ export class BooksService {
         },
       });
     } catch (error) {
-      if (error.code === 'P2025')
-        throw new BadRequestException("Book doesn't exist");
-      throw error;
+      if (error.code === 'P2002') {
+        // Jeśli wystąpił konflikt unikalności na tytule książki
+        throw new ConflictException("Book with the same title already exists");
+      }
+      throw error; // Rzuć inne błędy dalej
     }
   }
 
