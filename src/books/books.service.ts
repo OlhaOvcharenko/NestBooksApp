@@ -2,29 +2,31 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Book } from '@prisma/client';
 import { ConflictException } from '@nestjs/common';
+import{ UserOnBooks } from '@prisma/client';
+
 
 @Injectable()
 export class BooksService {
   constructor(private prismaService: PrismaService) {}
 
-  public getAll(): Promise<Book[]> {
+  public getAll (): Promise<Book[]> {
     return this.prismaService.book.findMany({ include: { author: true } });
   }
 
-  public getById(id: Book['id']): Promise<Book | null> {
+  public getById (id: Book['id']): Promise<Book | null> {
     return this.prismaService.book.findUnique({
       where: { id },
       include: { author: true },
     });
   }
 
-  public deleteById(id: Book['id']): Promise<Book> {
+  public deleteById (id: Book['id']): Promise<Book> {
     return this.prismaService.book.delete({
       where: { id },
     });
   }
 
-  public async create(
+  public async create (
     bookData: Omit<Book, 'id' | 'createdAt' | 'updatedAt'>,
   ): Promise<Book> {
     const { authorId, ...otherData } = bookData;
@@ -60,6 +62,26 @@ export class BooksService {
         }
       },
    });
- }
+  }
+ 
+
+  public async likeBook (
+    favoriteBook: Omit<UserOnBooks, 'id'>
+    ) : Promise<Book> 
+    {
+    const {bookId, userId} = favoriteBook
+    return await this.prismaService.book.update({
+      where: { id: bookId },
+      data: {
+        users: {
+          create: {
+            user: {
+              connect: { id: userId },
+            },
+          },
+        },
+      },
+    });
+  }
 
 }

@@ -6,7 +6,8 @@ import { ParseUUIDPipe } from '@nestjs/common';
 import { CreateBookDTO } from './dtos/create-book.dto';
 import { UpdateBookDTO } from './dtos/update-book.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-
+import { BadRequestException } from '@nestjs/common';
+import { LikedBookDTO } from './dtos/liked-book.dto';
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService ) {}
@@ -39,6 +40,16 @@ export class BooksController {
   @UseGuards(JwtAuthGuard)
     create(@Body() orderData: CreateBookDTO) {
     return this.booksService.create(orderData);
+  }
+
+  @Post('/like')
+  @UseGuards(JwtAuthGuard)
+  async likeBook(@Body() likedBookData: LikedBookDTO): Promise<void> {
+    try {
+      await this.booksService.likeBook(likedBookData);
+    } catch (error) {
+      throw new BadRequestException('Invalid bookId or userId');
+    }
   }
 
   @Put('/:id')
