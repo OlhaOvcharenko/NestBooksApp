@@ -1,10 +1,11 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { Get, Delete, Put, Post, Body, Param } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { ParseUUIDPipe } from '@nestjs/common';
 import { CreateBookDTO } from './dtos/create-book.dto';
 import { UpdateBookDTO } from './dtos/update-book.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('books')
 export class BooksController {
@@ -34,6 +35,7 @@ export class BooksController {
   }
 
   @Post('/')
+  @UseGuards(JwtAuthGuard)
     create(@Body() orderData: CreateBookDTO) {
     return this.booksService.create(orderData);
   }
